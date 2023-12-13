@@ -1,22 +1,20 @@
- import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {mediaActions} from "../redux/slices/media.slice";
 import {Container, Grid} from "@mui/material";
 import {originalImage} from "../api/apiConfig";
 import {Box, Stack} from "@mui/system";
+import {PersonMediaList} from "./PersonMediaList";
 
 const PersonDetails = ({personId}) => {
 
     const dispatch = useDispatch();
-    const {person, personMedia, error} = useSelector(state => state.mediaReducer);
+    const {person, error} = useSelector(state => state.mediaReducer);
 
     useEffect(() => {
         dispatch(mediaActions.getPerson(personId))
     }, [dispatch, personId])
 
-    useEffect(() => {
-        dispatch(mediaActions.getPersonMedia(personId))
-    }, [dispatch, personId])
 
     return (
         <Container sx={{color: "white", marginTop: "100px"}}>
@@ -55,7 +53,7 @@ const PersonDetails = ({personId}) => {
                                            key={person.id}
                                     >
                                         <p><b>Place of birth : </b></p>
-                                        <p>{person.place_of_birth}</p>
+                                        <p style={{textAlign: "center"}}>{person.place_of_birth}</p>
                                     </Stack>
                                 ) : null
                             }
@@ -91,7 +89,14 @@ const PersonDetails = ({personId}) => {
                                 {person.name}
                             </h3>
                             <p><i>{person.biography}</i></p>
-                            //swiper
+                        </Stack>
+                    </Box>
+                    <Box sx={{mt: "10px"}}>
+                        <Stack direction="column" spacing={2}>
+                            <h3 style={{fontWeight: "700", marginLeft: "15px"}}>
+                                Known for :
+                            </h3>
+                            <PersonMediaList key={person.id} personName={person.name}/>
                         </Stack>
                     </Box>
                 </Grid>

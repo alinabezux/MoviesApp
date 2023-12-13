@@ -28,7 +28,6 @@ const MediaCard = ({media, mediaType}) => {
             position: "relative",
             cursor: "pointer",
             backgroundColor: "inherit",
-
         }}>
 
             <Link to={`/${mediaType}/${media.id}`} style={{color: "grey"}}>

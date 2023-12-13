@@ -100,7 +100,7 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                 {credits && credits.crew ? (
                                     <Stack spacing={2} alignItems="center">
                                         <p><b>Crew</b></p>
-                                        {credits.crew.slice(0, 3).map((person) => (
+                                        {credits.crew.slice(0, 5).map((person) => (
                                             <Card
                                                 sx={{
                                                     height: "70px",
@@ -117,26 +117,29 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                                     MozBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
                                                 }}
                                             >
-                                                <CardActionArea>
-                                                    <Stack direction="row">
-                                                        <CardMedia
-                                                            component="img"
-                                                            image={originalImage(person.profile_path) || {empty}}
-                                                            alt={person.name}
-                                                            sx={{width: "30%"}}
-                                                        />
-                                                        <CardContent sx={{
-                                                            display: "flex",
-                                                            flexDirection: "column",
-                                                            alignItems: "flex-start"
-                                                        }}>
-                                                            <p>
-                                                                <b>{person.name}</b>
-                                                            </p>
-                                                            <p>{person.job}</p>
-                                                        </CardContent>
-                                                    </Stack>
-                                                </CardActionArea>
+                                                <Link to={`/person/${person.id}`}
+                                                      style={{color: "white", textDecoration: "none"}}>
+                                                    <CardActionArea>
+                                                        <Stack direction="row">
+                                                            <CardMedia
+                                                                component="img"
+                                                                image={originalImage(person.profile_path) || {empty}}
+                                                                alt={person.name}
+                                                                sx={{width: "30%"}}
+                                                            />
+                                                            <CardContent sx={{
+                                                                display: "flex",
+                                                                flexDirection: "column",
+                                                                alignItems: "flex-start"
+                                                            }}>
+                                                                <p>
+                                                                    <b>{person.name}</b>
+                                                                </p>
+                                                                <p>{person.job}</p>
+                                                            </CardContent>
+                                                        </Stack>
+                                                    </CardActionArea>
+                                                </Link>
                                             </Card>
                                         ))}
                                     </Stack>

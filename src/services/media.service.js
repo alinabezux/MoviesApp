@@ -8,7 +8,7 @@ const mediaService = {
     videos: (mediaType, mediaId) => axiosService.get(mediaType + '/' + mediaId + '/videos'),
     credits: (mediaType, mediaId) => axiosService.get(mediaType + '/' + mediaId + '/credits'),
     person: (personId) => axiosService.get('person/' + personId),
-    personMedia: (personId) => axiosService.get('person/' + personId + '/combined_credits'),
+    personMedias: (personName) => axiosService.get('search/' + 'person?query=' + personName),
 }
 
 export

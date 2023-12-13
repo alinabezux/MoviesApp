@@ -9,7 +9,7 @@ const initialState = {
     selectedMedia: null,
     videos: [],
     credits: {},
-    personMedia: {},
+    personSearch: [],
     person: {},
     page: 1,
     loading: false,
@@ -101,12 +101,13 @@ const getPerson = createAsyncThunk(
     }
 );
 
-const getPersonMedia = createAsyncThunk(
+const getPersonMedias = createAsyncThunk(
     'mediaSlice/getPersonMedia',
-    async (personId, {rejectedWithValue}) => {
+    async (personName, {rejectedWithValue}) => {
         try {
-            const {data} = await mediaService.personMedia(personId);
-            return data;
+            const {data} = await mediaService.personMedias(personName);
+            console.log(data.results);
+            return data.results;
         } catch (e) {
             return rejectedWithValue(e.response.data)
         }
@@ -226,16 +227,16 @@ const mediaSlice = createSlice({
                 state.loading = false
             })
 
-            .addCase(getPersonMedia.fulfilled, (state, action) => {
-                state.personMedia = action.payload
+            .addCase(getPersonMedias.fulfilled, (state, action) => {
+                state.personSearch = action.payload
                 state.loading = false
                 state.error = null
             })
-            .addCase(getPersonMedia.pending, (state) => {
+            .addCase(getPersonMedias.pending, (state) => {
                 state.loading = true
                 state.error = null
             })
-            .addCase(getPersonMedia.rejected, (state, action) => {
+            .addCase(getPersonMedias.rejected, (state, action) => {
                 state.error = action.payload
                 state.loading = false
             })
@@ -253,7 +254,7 @@ const mediaActions = {
     getMediaVideos,
     getMediaCredits,
     getPerson,
-    getPersonMedia
+    getPersonMedias
 }
 
 export {mediaReducer, mediaActions}
