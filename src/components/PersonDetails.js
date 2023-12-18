@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {mediaActions} from "../redux/slices/media.slice";
 import {Container, Grid} from "@mui/material";
-import {originalImage} from "../api/apiConfig";
+import {originalImage} from "../api";
 import {Box, Stack} from "@mui/system";
 import {PersonMediaList} from "./PersonMediaList";
 

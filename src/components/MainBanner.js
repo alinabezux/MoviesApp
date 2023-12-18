@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useEffect} from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import {mediaActions} from "../redux/slices/media.slice";
-import {originalImage} from "../api/apiConfig";
+import {originalImage} from "../api";
 import {Carousel} from "react-bootstrap";
 import Button from '@mui/material/Button';
 import {Link, useLocation} from "react-router-dom";
@@ -19,7 +19,7 @@ const MainBanner = ({mediaType, mediaCategory}) => {
 
     useEffect(() => {
         dispatch(mediaActions.getMediaByCategory({mediaType, mediaCategory}))
-    }, [dispatch, mediaType, mediaCategory]);
+    }, [dispatch]);
 
 
     const isHomePage = location.pathname.includes('/home');
@@ -36,7 +36,8 @@ const MainBanner = ({mediaType, mediaCategory}) => {
                         <Carousel.Caption>
                             {
                                 !isHomePage ?
-                                    <CircularRate value={media.vote_average}/> : null
+                                    <CircularRate value={media.vote_average}/>
+                                    : null
                             }
                             <h1>{(media.original_title) || (media.name)}</h1>
                             <p>{media.overview}</p>
@@ -45,12 +46,15 @@ const MainBanner = ({mediaType, mediaCategory}) => {
                                     <p style={{color: "red"}}><b>Release date: </b>{media.release_date} </p>
                                     : null
                             }
-                            <Link to={`/${mediaType}/${media.id}`}>
-                                <Button startIcon={<PlayArrowIcon/>} variant="contained"
-                                        style={{backgroundColor: "red"}}>watch
-                                    now</Button>
-                            </Link>
-
+                            {
+                                !isHomePage ?
+                                    <Link to={`/${mediaType}/${media.id}`}>
+                                        <Button startIcon={<PlayArrowIcon/>} variant="contained"
+                                                style={{backgroundColor: "red"}}>watch
+                                            now</Button>
+                                    </Link>
+                                    : null
+                            }
                         </Carousel.Caption>
                     </Carousel.Item>)
             }

@@ -21,7 +21,7 @@ const PersonMediaList = ({personName}) => {
                 person.known_for.map((media) => (
                     <Grid item  key={media.id} xs={4}>
                         <Card sx={{
-                            // margin: "20px",
+                            marginBottom: "20px",
                             position: "relative",
                             cursor: "pointer",
                             backgroundColor: "inherit"

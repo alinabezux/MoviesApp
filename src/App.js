@@ -1,15 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {HomePage} from "./pages/HomePage";
-
-import {SignInPage} from "./pages/SignInPage";
+import {HomePage, SignInPage, MediaPage, MediaDetailsPage, MainLayout, PersonPage} from "./pages";
 import './/styles'
-import {Footer} from "./components/Footer";
-import {MediaPage} from "./pages/MediaPage";
-import {mediaType} from "./api/apiConfig";
-import {MediaDetailsPage} from "./pages/MediaDetailsPage";
-import {MainLayout} from "./pages/MainLayout";
-import {PersonPage} from "./pages/PersonPage";
+import {Footer} from "./components";
+import {mediaType} from "./api";
+
 
 function App() {
     return (

@@ -1,6 +1,6 @@
 import {Box} from "@mui/system";
 import {useParams} from "react-router-dom";
-import {PersonDetails} from "../components/PersonDetails";
+import {PersonDetails} from "../components";
 
 const PersonPage = () => {
     const {id} = useParams();

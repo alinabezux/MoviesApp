@@ -1,12 +1,11 @@
-import {MainBanner} from "../components/MainBanner";
-import {mediaCategory, mediaType} from "../api/apiConfig";
+import {mediaCategory, mediaType} from "../api";
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab from '@mui/joy/Tab';
 import TabPanel from '@mui/joy/TabPanel';
 import {Box, Typography} from "@mui/material";
 import 'swiper/css';
-import {MediaSwiper} from "../components/Media/MediaSwiper";
+import {MediaSwiper, MainBanner} from "../components";
 import {Outlet} from "react-router-dom";
 
 
@@ -62,9 +61,9 @@ const HomePage = () => {
                     </TabPanel>
                 </Tabs>
             </Box>
-            <Outlet/>
+            {/*<Outlet/>*/
+            }
         </Box>
-
     );
 }
 

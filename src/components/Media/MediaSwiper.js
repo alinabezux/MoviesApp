@@ -6,6 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import {Navigation} from 'swiper/modules';
 import {mediaActions} from "../../redux/slices/media.slice";
+import {Container} from "@mui/material";
 
 const MediaSwiper = ({mediaType, mediaCategory}) => {
     const dispatch = useDispatch();
@@ -13,25 +14,25 @@ const MediaSwiper = ({mediaType, mediaCategory}) => {
 
     useEffect(() => {
         dispatch(mediaActions.getMediaByCategory({mediaType, mediaCategory}))
-    }, [dispatch, mediaType, mediaCategory]);
+    }, [dispatch]);
 
 
     return (
         <Swiper
             modules={[Navigation]}
-            spaceBetween={50}
+            spaceBetween={10}
             slidesPerView="auto"
             grabCursor={true}
             navigation
         >
-            {
-                listWithCategory.map((media) =>
-                    (<SwiperSlide key={media.id}>
-                        <MediaCard media={media}
-                                   mediaType={mediaType}/>
-                    </SwiperSlide>)
-                )
-            }
+            {listWithCategory.map((media) => (
+                <SwiperSlide key={media.id}>
+                    <MediaCard
+                        media={media}
+                        mediaType={mediaType}
+                    />
+                </SwiperSlide>
+            ))}
         </Swiper>
     );
 }

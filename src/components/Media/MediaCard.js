@@ -2,9 +2,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {Box, Card, CardActionArea, CardContent, CardMedia} from "@mui/material";
 import CircularRate from "../CircularRating";
-import {mediaType, originalImage} from "../../api/apiConfig";
+import {mediaType, originalImage} from "../../api";
 import {mediaActions} from "../../redux/slices/media.slice";
-import {MediaDetailsPage} from "../../pages/MediaDetailsPage";
+import {MediaDetailsPage} from "../../pages";
 import {Link} from "react-router-dom";
 
 const MediaCard = ({media, mediaType}) => {

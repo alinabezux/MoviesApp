@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {MediaDetails} from "../components/Media/MediaDetails";
+import {MediaDetails} from "../components";
 import {Box} from "@mui/system";
 
 

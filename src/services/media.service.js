@@ -7,8 +7,8 @@ const mediaService = {
     genres: (mediaType) => axiosService.get('genre/' + mediaType + '/list'),
     videos: (mediaType, mediaId) => axiosService.get(mediaType + '/' + mediaId + '/videos'),
     credits: (mediaType, mediaId) => axiosService.get(mediaType + '/' + mediaId + '/credits'),
-    person: (personId) => axiosService.get('person/' + personId),
-    personMedias: (personName) => axiosService.get('search/' + 'person?query=' + personName),
+    similar: (mediaType, mediaId) => axiosService.get(mediaType + '/' + mediaId + '/similar'),
+    reviews: (mediaType, mediaId) => axiosService.get(mediaType + '/' + mediaId + '/reviews')
 }
 
 export

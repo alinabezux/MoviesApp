@@ -1,7 +1,5 @@
-import {MainBanner} from "../components/MainBanner";
-import {mediaCategory} from "../api/apiConfig";
-import {Filter} from "../components/Filter";
-import {MediaList} from "../components/Media/MediaList";
+import {MainBanner, Filter, MediaList} from "../components";
+import {mediaCategory} from "../api";
 
 const MediaPage = ({mediaType}) => {
     //FILTER

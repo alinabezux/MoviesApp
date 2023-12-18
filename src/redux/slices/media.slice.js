@@ -9,8 +9,8 @@ const initialState = {
     selectedMedia: null,
     videos: [],
     credits: {},
-    personSearch: [],
-    person: {},
+    similar: [],
+    reviews: [],
     page: 1,
     loading: false,
     error: null
@@ -89,11 +89,23 @@ const getMediaCredits = createAsyncThunk(
     }
 );
 
-const getPerson = createAsyncThunk(
-    'mediaSlice/getPerson',
-    async (personId, {rejectedWithValue}) => {
+const getSimilarMedia = createAsyncThunk(
+    'mediaSlice/getSimilarMedia',
+    async ({mediaType, mediaId}, {rejectedWithValue}) => {
         try {
-            const {data} = await mediaService.person(personId);
+            const {data} = await mediaService.similar(mediaType, mediaId);
+            return data.results;
+        } catch (e) {
+            return rejectedWithValue(e.response.data)
+        }
+    }
+);
+
+const getMediaReviews = createAsyncThunk(
+    'mediaSlice/getMediaReviews',
+    async ({mediaType, mediaId}, {rejectedWithValue}) => {
+        try {
+            const {data} = await mediaService.reviews(mediaType, mediaId);
             return data;
         } catch (e) {
             return rejectedWithValue(e.response.data)
@@ -101,18 +113,6 @@ const getPerson = createAsyncThunk(
     }
 );
 
-const getPersonMedias = createAsyncThunk(
-    'mediaSlice/getPersonMedia',
-    async (personName, {rejectedWithValue}) => {
-        try {
-            const {data} = await mediaService.personMedias(personName);
-            console.log(data.results);
-            return data.results;
-        } catch (e) {
-            return rejectedWithValue(e.response.data)
-        }
-    }
-);
 
 const mediaSlice = createSlice({
     name: 'mediaSlice',
@@ -213,34 +213,35 @@ const mediaSlice = createSlice({
                 state.loading = false
             })
 
-            .addCase(getPerson.fulfilled, (state, action) => {
-                state.person = action.payload
+
+            .addCase(getSimilarMedia.fulfilled, (state, action) => {
+                state.similar = action.payload
                 state.loading = false
                 state.error = null
             })
-            .addCase(getPerson.pending, (state) => {
+            .addCase(getSimilarMedia.pending, (state) => {
                 state.loading = true
                 state.error = null
             })
-            .addCase(getPerson.rejected, (state, action) => {
+            .addCase(getSimilarMedia.rejected, (state, action) => {
                 state.error = action.payload
                 state.loading = false
             })
 
-            .addCase(getPersonMedias.fulfilled, (state, action) => {
-                state.personSearch = action.payload
+
+            .addCase(getMediaReviews.fulfilled, (state, action) => {
+                state.reviews = action.payload
                 state.loading = false
                 state.error = null
             })
-            .addCase(getPersonMedias.pending, (state) => {
+            .addCase(getMediaReviews.pending, (state) => {
                 state.loading = true
                 state.error = null
             })
-            .addCase(getPersonMedias.rejected, (state, action) => {
+            .addCase(getMediaReviews.rejected, (state, action) => {
                 state.error = action.payload
                 state.loading = false
             })
-
 })
 
 const {reducer: mediaReducer, actions: {setSelectedMedia}} = mediaSlice;
@@ -253,8 +254,8 @@ const mediaActions = {
     getGenres,
     getMediaVideos,
     getMediaCredits,
-    getPerson,
-    getPersonMedias
+    getSimilarMedia,
+    getMediaReviews
 }
 
 export {mediaReducer, mediaActions}

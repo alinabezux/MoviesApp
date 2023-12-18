@@ -1,9 +1,20 @@
-import {Card, CardActionArea, CardContent, CardMedia, Container, Grid} from "@mui/material";
+import {
+    Avatar,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardHeader,
+    CardMedia,
+    Container,
+    Grid,
+    Typography
+} from "@mui/material";
+import {red} from '@mui/material/colors';
 import {useDispatch, useSelector} from "react-redux";
 import {mediaActions} from "../../redux/slices/media.slice";
 import {useEffect} from "react";
 import {Box, Stack} from "@mui/system";
-import {originalImage, youtubePath} from "../../api/apiConfig";
+import {originalImage, w500Image, youtubePath} from "../../api";
 import imdb from '../../assets/IMDB_Logo_2016.svg.png';
 import empty from '../../assets/stub-empty.svg';
 import {Link, useLocation} from "react-router-dom";
@@ -12,13 +23,15 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation} from 'swiper/modules';
 import 'swiper/css/navigation';
 import 'swiper/css';
+import Button from "@mui/material/Button";
+import {format, parseISO} from 'date-fns';
+import {MediaCard} from "./MediaCard";
 
 
 const MediaDetails = ({mediaType, mediaId}) => {
     const dispatch = useDispatch();
     const location = useLocation();
-    const {media, videos, credits, error} = useSelector(state => state.mediaReducer);
-
+    const {media, videos, credits, reviews, similar, error} = useSelector(state => state.mediaReducer);
 
     useEffect(() => {
         dispatch(mediaActions.getOneMedia({mediaType: mediaType, mediaId: mediaId}))
@@ -31,6 +44,15 @@ const MediaDetails = ({mediaType, mediaId}) => {
     useEffect(() => {
         dispatch(mediaActions.getMediaCredits({mediaType: mediaType, mediaId: mediaId}))
     }, [dispatch, mediaType, mediaId]);
+
+    useEffect(() => {
+        dispatch(mediaActions.getMediaReviews({mediaType: mediaType, mediaId: mediaId}))
+    }, [dispatch, mediaType, mediaId]);
+
+    useEffect(() => {
+        dispatch(mediaActions.getSimilarMedia({mediaType: mediaType, mediaId: mediaId}));
+    }, [dispatch, mediaType, mediaId]);
+
 
     const TV = location.pathname.includes('/tv');
 
@@ -96,54 +118,6 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                     (media.budget ?
                                         <p><b>Budget : </b><br/>{media.budget} $</p> : null)
                                 }
-                                <hr/>
-                                {credits && credits.crew ? (
-                                    <Stack spacing={2} alignItems="center">
-                                        <p><b>Crew</b></p>
-                                        {credits.crew.slice(0, 5).map((person) => (
-                                            <Card
-                                                sx={{
-                                                    height: "70px",
-                                                    width: "200px",
-                                                    fontSize: "10px",
-
-                                                    backgroundColor: "rgb(33,32,32,0.1)",
-                                                    backdropFilter: "blur(5px)",
-                                                    borderRadius: "10px",
-                                                    color: "white",
-                                                    mx: "7px",
-                                                    boxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
-                                                    WebkitBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
-                                                    MozBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
-                                                }}
-                                            >
-                                                <Link to={`/person/${person.id}`}
-                                                      style={{color: "white", textDecoration: "none"}}>
-                                                    <CardActionArea>
-                                                        <Stack direction="row">
-                                                            <CardMedia
-                                                                component="img"
-                                                                image={originalImage(person.profile_path) || {empty}}
-                                                                alt={person.name}
-                                                                sx={{width: "30%"}}
-                                                            />
-                                                            <CardContent sx={{
-                                                                display: "flex",
-                                                                flexDirection: "column",
-                                                                alignItems: "flex-start"
-                                                            }}>
-                                                                <p>
-                                                                    <b>{person.name}</b>
-                                                                </p>
-                                                                <p>{person.job}</p>
-                                                            </CardContent>
-                                                        </Stack>
-                                                    </CardActionArea>
-                                                </Link>
-                                            </Card>
-                                        ))}
-                                    </Stack>
-                                ) : null}
                             </Stack>
                         </Box>
                     </Grid>
@@ -223,59 +197,157 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                 </Swiper>
                                 <p>{media.overview}</p>
 
-                                <hr/>
-                                <h4 style={{fontWeight: "700"}}>
-                                    Cast
-                                </h4>
-                                <Grid container rowSpacing={2}>
-                                    {credits && credits.cast ? (
-                                        credits.cast.slice(0, 6).map(char =>
-                                            <Grid item xs={6} md={4}>
-                                                <Card key={char.credit_id} sx={{
-                                                    height: "100px",
-                                                    fontSize: "11px",
-                                                    backgroundColor: "rgb(33,32,32,0.1)",
-                                                    backdropFilter: "blur(5px)",
-                                                    borderRadius: "10px",
-                                                    mx: "7px",
+                                <Box>
+                                    <hr/>
+                                    <h4 style={{fontWeight: "700"}}>
+                                        Cast
+                                    </h4>
+                                    <Grid container rowSpacing={2}>
+                                        {credits && credits.cast ? (
+                                            credits.cast.slice(0, 6).map(char =>
+                                                <Grid item xs={6} md={4}>
+                                                    <Card key={char.credit_id} sx={{
+                                                        height: "100px",
+                                                        fontSize: "11px",
+                                                        backgroundColor: "rgb(33,32,32,0.1)",
+                                                        backdropFilter: "blur(5px)",
+                                                        borderRadius: "10px",
+                                                        mx: "7px",
 
-                                                    boxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
-                                                    WebkitBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
-                                                    MozBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)"
-                                                }}
-                                                >
-                                                    <Link to={`/person/${char.id}`}
-                                                          style={{color: "white", textDecoration: "none"}}>
-                                                        <CardActionArea>
-                                                            <Stack direction="row">
-                                                                <CardMedia
-                                                                    component="img"
-                                                                    image={originalImage(char.profile_path)}
-                                                                    alt={char.name}
-                                                                    sx={{width: "25%"}}
-                                                                />
-                                                                <CardContent sx={{
-                                                                    display: "flex",
-                                                                    flexDirection: "column",
-                                                                    alignItems: "flex-start"
-                                                                }}>
-                                                                    <p><b>{char.name}</b></p>
-                                                                    <p>{char.character}</p>
-                                                                </CardContent>
-                                                            </Stack>
-                                                        </CardActionArea>
-                                                    </Link>
-                                                </Card>
-                                            </Grid>
-                                        )) : null
-                                    }
-                                </Grid>
+                                                        boxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
+                                                        WebkitBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
+                                                        MozBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)"
+                                                    }}
+                                                    >
+                                                        <Link to={`/person/${char.id}`}
+                                                              style={{color: "white", textDecoration: "none"}}>
+                                                            <CardActionArea>
+                                                                <Stack direction="row">
+                                                                    <CardMedia
+                                                                        component="img"
+                                                                        image={originalImage(char.profile_path)}
+                                                                        alt={char.name}
+                                                                        sx={{width: "25%"}}
+                                                                    />
+                                                                    <CardContent sx={{
+                                                                        display: "flex",
+                                                                        flexDirection: "column",
+                                                                        alignItems: "flex-start"
+                                                                    }}>
+                                                                        <p><b>{char.name}</b></p>
+                                                                        <p>{char.character}</p>
+                                                                    </CardContent>
+                                                                </Stack>
+                                                            </CardActionArea>
+                                                        </Link>
+                                                    </Card>
+                                                </Grid>
+                                            )) : null
+                                        }
+                                    </Grid>
+                                </Box>
+                                <Box>
+                                    <hr/>
+                                    <h4 style={{fontWeight: "700"}}>Crew</h4>
+                                    <Grid container rowSpacing={2}>
+                                        {credits && credits.crew ? (
+                                            credits.crew.slice(0, 5).map(person =>
+                                                <Grid item xs={6} md={4}>
+                                                    <Card key={person.credit_id} sx={{
+                                                        height: "100px",
+                                                        fontSize: "11px",
+                                                        backgroundColor: "rgb(33,32,32,0.1)",
+                                                        backdropFilter: "blur(5px)",
+                                                        borderRadius: "10px",
+                                                        mx: "7px",
 
+                                                        boxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
+                                                        WebkitBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)",
+                                                        MozBoxShadow: "0px 0px 20px 7px rgba(0,0,0,0.4)"
+                                                    }}
+                                                    >
+                                                        <Link to={`/person/${person.id}`}
+                                                              style={{color: "white", textDecoration: "none"}}>
+                                                            <CardActionArea>
+                                                                <Stack direction="row">
+                                                                    <CardMedia
+                                                                        component="img"
+                                                                        image={originalImage(person.profile_path)}
+                                                                        alt={person.name}
+                                                                        sx={{width: "25%"}}
+                                                                    />
+                                                                    <CardContent sx={{
+                                                                        display: "flex",
+                                                                        flexDirection: "column",
+                                                                        alignItems: "flex-start"
+                                                                    }}>
+                                                                        <p><b>{person.name}</b></p>
+                                                                        <p>{person.job}</p>
+                                                                    </CardContent>
+                                                                </Stack>
+                                                            </CardActionArea>
+                                                        </Link>
+                                                    </Card>
+                                                </Grid>
+                                            )) : null
+                                        }
+                                    </Grid>
+                                </Box>
                             </Stack>
+                            <Box>
+                                <hr/>
+                                <h4 style={{fontWeight: "700"}}>Reviews</h4>
+                                <Button variant="contained" color="error" sx>Add review</Button>
+                                {reviews && reviews.results ? (
+                                    reviews.results.map((review) => (
+                                        <Card key={review.id}
+                                              sx={{
+                                                  fontSize: "14px",
+                                                  backgroundColor: "rgba(255,255,255,0.1)",
+                                                  backdropFilter: "blur(5px)",
+                                                  borderRadius: "10px",
+                                                  mx: "7px",
+                                                  my: "20px",
+                                                  color: 'white',
+
+
+                                              }}
+                                        >
+                                            <CardHeader avatar={
+                                                <Avatar sx={{bgcolor: red[500]}} aria-label="avatar">
+                                                    <img src={w500Image(review.author_details.avatar_path)}
+                                                         alt="avatar"/>
+                                                </Avatar>
+                                            }
+                                                        title={<p><b>{review.author_details.username}</b></p>}
+                                                        subheader={
+                                                            <p style={{
+                                                                color: 'white',
+                                                                fontSize: "11px",
+                                                            }}>{format(parseISO(review.created_at), 'MMMM d, yyyy HH:mm')}</p>}
+                                            />
+                                            <CardContent>
+                                                <p>
+                                                    {review.content}
+                                                </p>
+                                            </CardContent>
+                                        </Card>
+                                    ))
+                                ) : null}
+                            </Box>
                         </Box>
                     </Grid>
 
                 </Grid>
+                <Box>
+                    <hr/>
+                    <h4 style={{fontWeight: "700"}}>Similar</h4>
+                    {similar && similar.results ? (
+                        similar.results.map(item => (
+                            <MediaCard key={item.id} media={item} mediaType={mediaType}/>
+                        ))
+                    ) : null}
+                </Box>
             </Container>
             {
                 error && <h1>Error:(</h1>
