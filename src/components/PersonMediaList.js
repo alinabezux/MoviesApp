@@ -1,10 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {mediaActions} from "../redux/slices/media.slice";
 import {Card, CardActionArea, CardContent, CardMedia, Grid} from "@mui/material";
 import {Link} from "react-router-dom";
-import {originalImage, w500Image} from "../api/apiConfig";
+import {originalImage, w500Image} from "../api";
 import CircularRate from "./CircularRating";
+import {personActions} from "../redux/slices/person.slice";
 
 const PersonMediaList = ({personName}) => {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const PersonMediaList = ({personName}) => {
     const {personSearch, error} = useSelector(state => state.mediaReducer);
     console.log(personSearch);
     useEffect(() => {
-        dispatch(mediaActions.getPersonMedias(personName))
+        dispatch(personActions.getPersonMedias(personName))
     }, [dispatch, personName])
 
     return (

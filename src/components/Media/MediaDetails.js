@@ -7,7 +7,8 @@ import {
     CardMedia,
     Container,
     Grid,
-    Typography
+    Typography,
+    Button
 } from "@mui/material";
 import {red} from '@mui/material/colors';
 import {useDispatch, useSelector} from "react-redux";
@@ -23,7 +24,6 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation} from 'swiper/modules';
 import 'swiper/css/navigation';
 import 'swiper/css';
-import Button from "@mui/material/Button";
 import {format, parseISO} from 'date-fns';
 import {MediaCard} from "./MediaCard";
 
@@ -52,6 +52,8 @@ const MediaDetails = ({mediaType, mediaId}) => {
     useEffect(() => {
         dispatch(mediaActions.getSimilarMedia({mediaType: mediaType, mediaId: mediaId}));
     }, [dispatch, mediaType, mediaId]);
+
+    console.log("Similar Media:", similar);
 
 
     const TV = location.pathname.includes('/tv');
@@ -95,7 +97,7 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                     ))) : null
                                 }
 
-                                {media.production_companies ? (
+                                {media && media.production_companies ? (
                                     media.production_companies.slice(0, 1).map((company) => (
                                         <Stack direction="column"
                                                alignItems="center"
@@ -115,8 +117,8 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                 }
 
                                 {
-                                    (media.budget ?
-                                        <p><b>Budget : </b><br/>{media.budget} $</p> : null)
+                                    (media && media.budget ?
+                                        (<p><b>Budget : </b><br/>{media.budget} $</p>) : null)
                                 }
                             </Stack>
                         </Box>
@@ -143,8 +145,8 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                         </h4>
                                         {
                                             !TV ?
-                                                <h4>( {(media.release_date ? media.release_date.substring(0, 4) : "")} )</h4> :
-                                                <h4>( {(media.first_air_date ? media.first_air_date.substring(0, 4) : "")} )</h4>
+                                                <h4>( {(media && media.release_date ? (media.release_date.substring(0, 4)) : "")} )</h4> :
+                                                <h4>( {(media && media.first_air_date ? (media.first_air_date.substring(0, 4)) : "")} )</h4>
                                         }
                                     </Stack>
                                     <Stack direction="row" spacing={2} alignItems="center">
@@ -272,7 +274,7 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                                                 <Stack direction="row">
                                                                     <CardMedia
                                                                         component="img"
-                                                                        image={originalImage(person.profile_path)}
+                                                                        image={person.profile_path}
                                                                         alt={person.name}
                                                                         sx={{width: "25%"}}
                                                                     />
@@ -302,31 +304,31 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                     reviews.results.map((review) => (
                                         <Card key={review.id}
                                               sx={{
-                                                  fontSize: "14px",
                                                   backgroundColor: "rgba(255,255,255,0.1)",
                                                   backdropFilter: "blur(5px)",
                                                   borderRadius: "10px",
                                                   mx: "7px",
                                                   my: "20px",
                                                   color: 'white',
+                                                  textAlign: "center",
+                                                  fontSize: "13px",
 
 
+                                                  display: "flex",
+                                                  flexDirection: "column",
+                                                  alignItems: "flex-start",
                                               }}
                                         >
                                             <CardHeader avatar={
                                                 <Avatar sx={{bgcolor: red[500]}} aria-label="avatar">
-                                                    <img src={w500Image(review.author_details.avatar_path)}
-                                                         alt="avatar"/>
-                                                </Avatar>
-                                            }
-                                                        title={<p><b>{review.author_details.username}</b></p>}
-                                                        subheader={
-                                                            <p style={{
-                                                                color: 'white',
-                                                                fontSize: "11px",
-                                                            }}>{format(parseISO(review.created_at), 'MMMM d, yyyy HH:mm')}</p>}
+                                                    {review.author_details.username.charAt(0).toUpperCase()}
+                                                </Avatar>}
+                                                        title={<p
+                                                            style={{paddingTop: "17px", fontFamily: "Montserrat",}}>
+                                                            <b>{review.author_details.username}</b> • {format(parseISO(review.created_at), 'MMMM d, yyyy HH:mm')}
+                                                        </p>}
                                             />
-                                            <CardContent>
+                                            <CardContent style={{paddingTop: "0px"}}>
                                                 <p>
                                                     {review.content}
                                                 </p>
@@ -342,11 +344,29 @@ const MediaDetails = ({mediaType, mediaId}) => {
                 <Box>
                     <hr/>
                     <h4 style={{fontWeight: "700"}}>Similar</h4>
-                    {similar && similar.results ? (
-                        similar.results.map(item => (
-                            <MediaCard key={item.id} media={item} mediaType={mediaType}/>
-                        ))
-                    ) : null}
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        justifyContent: "space-between",
+                    }}>
+                        <Swiper
+                            modules={[Navigation]}
+                            spaceBetween={2}
+                            slidesPerView={4}  // Set the number of slides per view to 4
+                            grabCursor={true}
+                            navigation
+                            // style={{width: "100%"}}
+                        >
+                            {similar && similar.results ? (
+                                similar.results.map(item => (
+                                    <SwiperSlide key={item.id}>
+                                        <MediaCard media={item} mediaType={mediaType}/>
+                                    </SwiperSlide>
+                                ))
+                            ) : null}
+                        </Swiper>
+                    </Box>
                 </Box>
             </Container>
             {

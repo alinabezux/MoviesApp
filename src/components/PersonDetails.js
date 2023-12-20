@@ -1,10 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {mediaActions} from "../redux/slices/media.slice";
 import {Container, Grid} from "@mui/material";
 import {originalImage} from "../api";
 import {Box, Stack} from "@mui/system";
 import {PersonMediaList} from "./PersonMediaList";
+import {personActions} from "../redux/slices/person.slice";
+import empty from '../assets/stub-empty.svg';
 
 const PersonDetails = ({personId}) => {
 
@@ -12,7 +13,7 @@ const PersonDetails = ({personId}) => {
     const {person, error} = useSelector(state => state.mediaReducer);
 
     useEffect(() => {
-        dispatch(mediaActions.getPerson(personId))
+        dispatch(personActions.getPerson(personId))
     }, [dispatch, personId])
 
 
@@ -32,9 +33,10 @@ const PersonDetails = ({personId}) => {
                     }}>
                         <Stack spacing={2}>
                             <img
-                                src={originalImage(person.profile_path)}
+                                src={person && person.profile_path ? originalImage(person.profile_path) : empty}
                                 alt={person.name}
                             />
+
 
                             {
                                 person && person.birthday ? (

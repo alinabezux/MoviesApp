@@ -19,7 +19,7 @@ const MainBanner = ({mediaType, mediaCategory}) => {
 
     useEffect(() => {
         dispatch(mediaActions.getMediaByCategory({mediaType, mediaCategory}))
-    }, [dispatch]);
+    }, [dispatch,mediaType, mediaCategory]);
 
 
     const isHomePage = location.pathname.includes('/home');

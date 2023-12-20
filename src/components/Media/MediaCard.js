@@ -19,10 +19,11 @@ const MediaCard = ({media, mediaType}) => {
     //     const genre = genres?.find(value => value.id === id);
     //     return genre?.name;
     // }
-
+    console.log("Media Card Data:", media);
+    console.log("Media Type:", mediaType);
     return (
         <Card sx={{
-            width: "20%",
+            // width: "20%",
             height: "auto",
             margin: "10px",
             position: "relative",
@@ -52,7 +53,13 @@ const MediaCard = ({media, mediaType}) => {
                         {/*    {(media.genre_ids).slice(0, 2)*/}
                         {/*        .map(id => <p key={id} style={{marginRight: "5px"}}><i>{findGenresById(id)}</i></p>)}*/}
                         {/*</Box>*/}
-                        <b><p>{(media.release_date || media.first_air_date).substring(0, 4)}</p></b>
+                        <p>
+                            <b>
+                                {media.release_date ? media.release_date.substring(0, 4) : ''}
+                                {media.first_air_date ? media.first_air_date.substring(0, 4) : ''}
+                            </b>
+                        </p>
+
                     </CardContent>
                 </CardActionArea>
             </Link>

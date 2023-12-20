@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 import {Navigation} from 'swiper/modules';
 import {mediaActions} from "../../redux/slices/media.slice";
 import {Container} from "@mui/material";
+import {Box} from "@mui/system";
 
 const MediaSwiper = ({mediaType, mediaCategory}) => {
     const dispatch = useDispatch();
@@ -14,26 +15,34 @@ const MediaSwiper = ({mediaType, mediaCategory}) => {
 
     useEffect(() => {
         dispatch(mediaActions.getMediaByCategory({mediaType, mediaCategory}))
-    }, [dispatch]);
+    }, [dispatch, mediaType, mediaCategory]);
 
 
     return (
-        <Swiper
-            modules={[Navigation]}
-            spaceBetween={10}
-            slidesPerView="auto"
-            grabCursor={true}
-            navigation
-        >
-            {listWithCategory.map((media) => (
-                <SwiperSlide key={media.id}>
-                    <MediaCard
-                        media={media}
-                        mediaType={mediaType}
-                    />
-                </SwiperSlide>
-            ))}
-        </Swiper>
+        <Box sx={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+        }}>
+            <Swiper
+                modules={[Navigation]}
+                spaceBetween={2}
+                slidesPerView={4}  // Set the number of slides per view to 4
+                grabCursor={true}
+                navigation
+                // style={{width: "100%"}}
+            >
+                {listWithCategory ? (
+                    listWithCategory.map(item => (
+                        <SwiperSlide key={item.id}>
+                            <MediaCard media={item} mediaType={mediaType}/>
+                        </SwiperSlide>
+                    ))
+                ) : null}
+            </Swiper>
+        </Box>
+
     );
 }
 

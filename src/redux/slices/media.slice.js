@@ -94,7 +94,7 @@ const getSimilarMedia = createAsyncThunk(
     async ({mediaType, mediaId}, {rejectedWithValue}) => {
         try {
             const {data} = await mediaService.similar(mediaType, mediaId);
-            return data.results;
+            return data;
         } catch (e) {
             return rejectedWithValue(e.response.data)
         }
