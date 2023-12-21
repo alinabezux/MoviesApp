@@ -1,29 +1,38 @@
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {mediaActions} from "../../redux/slices/media.slice";
-import {Container} from "@mui/material";
+import {Box, Container, Pagination} from "@mui/material";
 import {MediaCard} from "./MediaCard";
+
 
 const MediaList = ({mediaType}) => {
     const dispatch = useDispatch();
-    const {list, loading, error} = useSelector((state) => state.mediaReducer);
+
+    const {list, total_pages, currentPageMedia} = useSelector((state) => state.mediaReducer);
+
 
     useEffect(() => {
         dispatch(mediaActions.getAllMedia(mediaType));
     }, [dispatch, mediaType]);
+
     return (
-        <Container
-            sx={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-            }}
-        >
-            {
-                list.map((media) => <MediaCard key={media.id} media={media} mediaType={mediaType}/>)
-            }
-        </Container>
+        <Box>
+            <Container
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(20%, 1fr))",
+                    gap: "15px",
+                    my: "15px",
+                }}
+            >
+                {
+                    list.map((media) => <MediaCard key={media.id} media={media} mediaType={mediaType}/>)
+                }
+            </Container>
+            <Pagination count={total_pages} page={page} variant="outlined" color="warning"
+
+            />
+        </Box>
     );
 }
 

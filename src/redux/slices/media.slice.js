@@ -6,22 +6,24 @@ const initialState = {
     listWithCategory: [],
     genres: [],
     media: {},
-    selectedMedia: null,
     videos: [],
     credits: {},
     similar: [],
     reviews: [],
-    page: 1,
+
+    total_pages: null,
+    currentPageMedia: 1,
+
     loading: false,
     error: null
 }
 
 const getAllMedia = createAsyncThunk(
     'mediaSlice/getAllMedia',
-    async (mediaType, {rejectedWithValue}) => {
+    async ({mediaType, page}, {rejectedWithValue}) => {
         try {
-            const {data} = await mediaService.list(mediaType);
-            return data.results;
+            const {data} = await mediaService.list(mediaType, page);
+            return data;
         } catch (e) {
             return rejectedWithValue(e.response.data)
         }
@@ -118,14 +120,15 @@ const mediaSlice = createSlice({
     name: 'mediaSlice',
     initialState,
     reducers: {
-        setSelectedMedia: (state, action) => {
-            state.selectedMedia = action.payload
+        setCurrentPageMedia: (state, action) => {
+            state.currentPageMedia = action.payload
         }
     },
     extraReducers: builder =>
         builder
             .addCase(getAllMedia.fulfilled, (state, action) => {
-                state.list = action.payload
+                state.list = action.payload.results
+                state.total_pages = action.payload.total_pages
                 state.loading = false
                 state.error = null
             })
@@ -244,11 +247,11 @@ const mediaSlice = createSlice({
             })
 })
 
-const {reducer: mediaReducer, actions: {setSelectedMedia}} = mediaSlice;
+const {reducer: mediaReducer, actions: {setCurrentPageMedia}} = mediaSlice;
 
 const mediaActions = {
     getAllMedia,
-    setSelectedMedia,
+    setCurrentPageMedia,
     getOneMedia,
     getMediaByCategory,
     getGenres,

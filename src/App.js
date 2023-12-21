@@ -19,7 +19,7 @@ function App() {
                     <Route path={'/person/:id'} element={<PersonPage/>}/>
                 </Route>
             </Routes>
-            {/*<Footer/>*/}
+            <Footer/>
         </BrowserRouter>
     );
 }

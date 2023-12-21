@@ -1,5 +1,6 @@
 import {MainBanner, Filter, MediaList} from "../components";
 import {mediaCategory} from "../api";
+import {Box} from "@mui/system";
 
 const MediaPage = ({mediaType}) => {
     //FILTER
@@ -9,12 +10,11 @@ const MediaPage = ({mediaType}) => {
     //рейтинг по цифрах
 
     return (
-
-        <>
+        <Box>
             <MainBanner mediaType={mediaType} mediaCategory={mediaCategory.popular}/>
             <Filter mediaType={mediaType}/>
             <MediaList mediaType={mediaType}/>
-        </>
+        </Box>
     );
 }
 

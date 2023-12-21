@@ -105,8 +105,13 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                                key={company.id}
                                         >
                                             <p><b>Company : </b></p>
-                                            <img src={originalImage(company.logo_path)} alt={company.name}
-                                                 width="60%"/>
+                                            {
+                                                company && company.logo_path ? (
+                                                        <img src={originalImage(company.logo_path)} alt={company.name}
+                                                             width="50%"/>) :
+                                                    <h5>{company.name}</h5>
+                                            }
+
                                         </Stack>
                                     ))
                                 ) : null}
@@ -227,7 +232,7 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                                                 <Stack direction="row">
                                                                     <CardMedia
                                                                         component="img"
-                                                                        image={originalImage(char.profile_path)}
+                                                                        image={char && char.profile_path ? (w500Image(char.profile_path)) : empty}
                                                                         alt={char.name}
                                                                         sx={{width: "25%"}}
                                                                     />
@@ -274,7 +279,7 @@ const MediaDetails = ({mediaType, mediaId}) => {
                                                                 <Stack direction="row">
                                                                     <CardMedia
                                                                         component="img"
-                                                                        image={person.profile_path}
+                                                                        image={person && person.profile_path ? (w500Image(person.profile_path)) : empty}
                                                                         alt={person.name}
                                                                         sx={{width: "25%"}}
                                                                     />

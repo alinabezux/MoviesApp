@@ -19,7 +19,7 @@ const MainBanner = ({mediaType, mediaCategory}) => {
 
     useEffect(() => {
         dispatch(mediaActions.getMediaByCategory({mediaType, mediaCategory}))
-    }, [dispatch,mediaType, mediaCategory]);
+    }, [dispatch, mediaType, mediaCategory]);
 
 
     const isHomePage = location.pathname.includes('/home');
@@ -31,7 +31,7 @@ const MainBanner = ({mediaType, mediaCategory}) => {
                     <Carousel.Item className="item" key={media.id}>
                         <img
                             src={originalImage(media.backdrop_path)}
-                            alt={(media.original_title) || (media.name)}
+                            alt={(media.title) || (media.name)}
                         />
                         <Carousel.Caption>
                             {
@@ -39,7 +39,7 @@ const MainBanner = ({mediaType, mediaCategory}) => {
                                     <CircularRate value={media.vote_average}/>
                                     : null
                             }
-                            <h1>{(media.original_title) || (media.name)}</h1>
+                            <h1>{(media.title) || (media.name)}</h1>
                             <p>{media.overview}</p>
                             {
                                 isHomePage ?

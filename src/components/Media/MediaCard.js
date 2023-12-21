@@ -2,10 +2,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {Box, Card, CardActionArea, CardContent, CardMedia} from "@mui/material";
 import CircularRate from "../CircularRating";
-import {mediaType, originalImage} from "../../api";
+import {mediaType, originalImage, w500Image} from "../../api";
 import {mediaActions} from "../../redux/slices/media.slice";
 import {MediaDetailsPage} from "../../pages";
 import {Link} from "react-router-dom";
+import poster from '../../assets/poster.jpg'
 
 const MediaCard = ({media, mediaType}) => {
     // const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const MediaCard = ({media, mediaType}) => {
     return (
         <Card sx={{
             // width: "20%",
-            height: "auto",
+            // height: "auto",
             margin: "10px",
             position: "relative",
             cursor: "pointer",
@@ -35,7 +36,7 @@ const MediaCard = ({media, mediaType}) => {
                 <CardActionArea>
                     <CardMedia
                         component="img"
-                        image={originalImage(media.poster_path)}
+                        image={media && media.poster_path ? (w500Image(media.poster_path)) : poster}
                         alt={media.original_title || media.name}
                         sx={{
                             transition: "all ease 0.5s",
